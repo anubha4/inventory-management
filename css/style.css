@@ -43,6 +43,12 @@ body {
     width: var(--sidebar-collapsed-width);
 }
 
+#sidebar.active .sidebar-header h3 {
+    opacity: 0;
+    width: 0;
+    pointer-events: none;
+}
+
 .sidebar-header {
     padding: 20px;
     background: var(--light-bg);
@@ -54,6 +60,9 @@ body {
 .sidebar-header h3 {
     color: var(--text-primary);
     margin: 0;
+    transition: opacity 0.3s, width 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .toggle-btn {
