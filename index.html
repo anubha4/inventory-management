@@ -1,77 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        success: '#10B981',
+                        dark: {
+                            100: '#1F2937',
+                            200: '#111827',
+                            300: '#374151'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="dark-theme">
-    <div class="wrapper">
+<body class="h-full bg-gray-50 dark:bg-dark-100 transition-colors duration-200">
+    <div class="min-h-full">
         <!-- Sidebar -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>IMS</h3>
-                <button id="sidebarCollapse" class="toggle-btn">
-                    <i class="fas fa-bars"></i>
+        <nav id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-dark-200 transform transition-transform duration-200 ease-in-out shadow-lg">
+            <div class="flex items-center justify-between h-16 px-4 bg-primary dark:bg-dark-300">
+                <h3 class="text-xl font-bold text-white">IMS</h3>
+                <button id="sidebarCollapse" class="p-2 rounded-lg hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-white">
+                    <i class="fas fa-bars text-white"></i>
                 </button>
             </div>
-            <ul class="list-unstyled components">
-                <li class="active">
-                    <a href="#" data-page="dashboard">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-page="products">
-                        <i class="fas fa-box"></i>
-                        <span>Products</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-page="stock">
-                        <i class="fas fa-warehouse"></i>
-                        <span>Stock</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-page="orders">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Orders</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" data-page="reports">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Reports</span>
-                    </a>
-                </li>
-            </ul>
+            <div class="flex flex-col flex-1 overflow-y-auto">
+                <ul class="flex-1 px-2 py-4 space-y-1">
+                    <li>
+                        <a href="#" data-page="dashboard" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300 group transition-colors duration-200">
+                            <i class="fas fa-tachometer-alt w-6"></i>
+                            <span class="ml-3">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="products" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300 group transition-colors duration-200">
+                            <i class="fas fa-box w-6"></i>
+                            <span class="ml-3">Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="stock" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300 group transition-colors duration-200">
+                            <i class="fas fa-warehouse w-6"></i>
+                            <span class="ml-3">Stock</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="orders" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300 group transition-colors duration-200">
+                            <i class="fas fa-shopping-cart w-6"></i>
+                            <span class="ml-3">Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="reports" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-300 group transition-colors duration-200">
+                            <i class="fas fa-chart-bar w-6"></i>
+                            <span class="ml-3">Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
-        <!-- Page Content -->
-        <div id="content">
-            <div class="top-bar">
-                <div class="user-info">
-                    <img src="https://via.placeholder.com/40" alt="User Avatar" class="avatar">
-                    <span class="username">Admin User</span>
-                </div>
-                <div class="actions">
-                    <button class="btn-notification">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </button>
-                    <button class="btn-logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </button>
+        <!-- Main Content -->
+        <div id="content" class="pl-64 transition-all duration-200">
+            <!-- Top Bar -->
+            <div class="sticky top-0 z-40 bg-white dark:bg-dark-200 shadow">
+                <div class="flex items-center justify-between h-16 px-4">
+                    <div class="flex items-center">
+                        <button id="mobileSidebarToggle" class="p-2 rounded-lg text-gray-600 dark:text-gray-200 lg:hidden hover:bg-gray-100 dark:hover:bg-dark-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-dark-300">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Theme Toggle -->
+                        <button id="themeToggle" class="p-2 rounded-lg text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-dark-300">
+                            <i class="fas fa-sun dark:hidden"></i>
+                            <i class="fas fa-moon hidden dark:inline"></i>
+                        </button>
+                        <!-- Notifications -->
+                        <div class="relative">
+                            <button class="p-2 rounded-lg text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-dark-300">
+                                <i class="fas fa-bell"></i>
+                                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary rounded-full">3</span>
+                            </button>
+                        </div>
+                        <!-- User Menu -->
+                        <div class="relative">
+                            <button class="flex items-center space-x-3 focus:outline-none">
+                                <img src="https://via.placeholder.com/40" alt="User Avatar" class="w-8 h-8 rounded-full">
+                                <span class="hidden md:inline-block text-sm font-medium text-gray-700 dark:text-gray-200">Admin User</span>
+                                <i class="fas fa-chevron-down text-xs text-gray-600 dark:text-gray-400"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Dynamic Content Container -->
-            <div id="main-content"></div>
+            <!-- Main Content Area -->
+            <main class="p-6">
+                <div id="main-content" class="container mx-auto"></div>
+            </main>
         </div>
     </div>
 
