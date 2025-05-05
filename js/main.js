@@ -246,7 +246,7 @@ function renderDashboard() {
             </div>
 
             <!-- Charts Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <div class="dashboard-card">
                     <div class="card-header mb-4">
                         <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Sales Overview</h2>
@@ -257,10 +257,65 @@ function renderDashboard() {
                 </div>
                 <div class="dashboard-card">
                     <div class="card-header mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Stock Trends</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="stockTrendsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="dashboard-card">
+                    <div class="card-header mb-4">
                         <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Category Distribution</h2>
                     </div>
                     <div class="chart-container">
                         <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Section -->
+                <div class="dashboard-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Recent Orders</h2>
+                        <a href="#" data-page="orders" class="text-sm text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200">
+                            View All
+                            <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                    <div class="overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-dark-300">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Order ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200 dark:bg-dark-200 dark:divide-gray-700">
+                                    ${mockData.orders.slice(0, 5).map(order => `
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-dark-300 transition-colors duration-150">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">#${order.id}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${order.date}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${
+                                                    order.status === 'Delivered' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                                    order.status === 'Processing' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                                                    order.status === 'Shipped' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                                                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                                }">
+                                                    ${order.status}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">$${order.total.toFixed(2)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -290,6 +345,72 @@ function renderDashboard() {
             plugins: {
                 legend: {
                     display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(156, 163, 175, 0.1)'
+                    },
+                    ticks: {
+                        color: '#6B7280'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#6B7280'
+                    }
+                }
+            }
+        }
+    });
+
+    // Initialize Stock Trends Chart
+    const stockTrendsCtx = document.getElementById('stockTrendsChart').getContext('2d');
+    new Chart(stockTrendsCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: mockData.products.slice(0, 4).map(product => ({
+                label: product.name,
+                data: Array.from({ length: 6 }, () => Math.floor(Math.random() * 50) + 50),
+                borderColor: [
+                    '#3B82F6',
+                    '#10B981',
+                    '#F59E0B',
+                    '#EF4444'
+                ][mockData.products.indexOf(product)],
+                tension: 0.4,
+                fill: false
+            }))
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#6B7280',
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        padding: 20,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
                 }
             },
             scales: {
@@ -402,39 +523,166 @@ function renderProducts() {
 
 function renderStock() {
     const stockHTML = `
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Stock Movements</h2>
-                <button class="btn btn-primary">Record Movement</button>
+        <div class="space-y-6">
+            <!-- Stock Trends Chart -->
+            <div class="dashboard-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Stock Level Trends</h2>
+                    <div class="flex space-x-2">
+                        <select id="timeRange" class="form-select text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-dark-300 dark:text-gray-200">
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-container h-96">
+                    <canvas id="stockLevelChart"></canvas>
+                </div>
             </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Product</th>
-                            <th>Type</th>
-                            <th>Quantity</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${mockData.stockMovements.map(movement => `
+
+            <!-- Stock Movements Table -->
+            <div class="dashboard-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Stock Movements</h2>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Record Movement
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-dark-300">
                             <tr>
-                                <td>#${movement.id}</td>
-                                <td>${mockData.products.find(p => p.id === movement.productId).name}</td>
-                                <td>${movement.type.toUpperCase()}</td>
-                                <td>${movement.quantity}</td>
-                                <td>${movement.date}</td>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Product</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantity</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-dark-200 dark:divide-gray-700">
+                            ${mockData.stockMovements.map(movement => {
+                                const product = mockData.products.find(p => p.id === movement.productId);
+                                return `
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-dark-300 transition-colors duration-150">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">#${movement.id}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-box text-gray-400"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">${product.name}</div>
+                                                    <div class="text-sm text-gray-500 dark:text-gray-400">${product.category}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${
+                                                movement.type === 'in' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                                                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                            }">
+                                                ${movement.type.toUpperCase()}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${movement.quantity}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${movement.date}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                Completed
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     `;
     
     mainContent.innerHTML = stockHTML;
+
+    // Initialize Stock Level Chart
+    const stockLevelCtx = document.getElementById('stockLevelChart').getContext('2d');
+    new Chart(stockLevelCtx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: 30 }, (_, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - (29 - i));
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }),
+            datasets: mockData.products.slice(0, 4).map(product => ({
+                label: product.name,
+                data: Array.from({ length: 30 }, () => Math.floor(Math.random() * 50) + 50),
+                borderColor: [
+                    '#3B82F6',
+                    '#10B981',
+                    '#F59E0B',
+                    '#EF4444'
+                ][mockData.products.indexOf(product)],
+                tension: 0.4,
+                fill: false
+            }))
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#6B7280',
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        padding: 20,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(156, 163, 175, 0.1)'
+                    },
+                    ticks: {
+                        color: '#6B7280'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#6B7280',
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
+            }
+        }
+    });
+
+    // Add event listener for time range selector
+    document.getElementById('timeRange')?.addEventListener('change', (e) => {
+        // In a real application, this would fetch new data based on the selected time range
+        console.log('Time range changed to:', e.target.value, 'days');
+    });
 }
 
 function renderOrders() {
