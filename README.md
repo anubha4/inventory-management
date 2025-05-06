@@ -1,71 +1,117 @@
-# Inventory Management System
+# Inventory Management System (IMS)
 
-A modern, responsive web-based Inventory Management System with a dark theme. This frontend application provides a user-friendly interface for managing products, stock, orders, and viewing reports.
+A full-stack Inventory Management System built with MERN stack and MySQL.
 
 ## Features
 
-- 🎨 Modern dark-themed UI
-- 📱 Responsive design for desktop, tablet, and mobile devices
-- 📊 Interactive charts using Chart.js
-- 🔄 Real-time data updates (simulated)
-- 📦 Product management
-- 📋 Stock tracking
-- 🛒 Order management
-- 📈 Sales reports and analytics
+- User Authentication with JWT
+- Product Management
+- Stock Management with real-time updates
+- Order Management (Sales & Purchases)
+- Reporting System with PDF/CSV export
+- Interactive Dashboard with Charts
+- Responsive Design
 
-## Pages
+## Tech Stack
 
-1. **Dashboard** - Overview of key metrics and recent activities
-2. **Products** - Manage product catalog
-3. **Stock** - Track stock movements and inventory levels
-4. **Orders** - Process and manage customer orders
-5. **Reports** - View sales trends and analytics
+- **Frontend**: React.js, TailwindCSS, Chart.js
+- **Backend**: Node.js, Express.js
+- **Database**: MySQL
+- **Authentication**: JWT, bcrypt
+- **API**: RESTful with HTTPS
 
-## Technology Stack
+## Prerequisites
 
-- HTML5
-- CSS3 (with CSS Variables for theming)
-- JavaScript (ES6+)
-- Chart.js for data visualization
-- Font Awesome for icons
-
-## Getting Started
-
-1. Clone the repository
-2. Open `index.html` in a modern web browser
-3. No build process required - it's a static website
+- Node.js >= 14.x
+- MySQL >= 8.x
+- npm >= 6.x
 
 ## Project Structure
 
 ```
 inventory-management/
-├── index.html          # Main HTML file
-├── css/
-│   └── style.css      # Styles and theme
-├── js/
-│   ├── main.js        # Application logic
-│   └── mockData.js    # Simulated backend data
-└── README.md          # Project documentation
+├── client/                 # React frontend
+│   ├── public/
+│   └── src/
+│       ├── components/     # Reusable components
+│       ├── pages/         # Page components
+│       ├── context/       # React context
+│       ├── hooks/         # Custom hooks
+│       ├── services/      # API services
+│       └── utils/         # Utility functions
+├── server/                # Node.js backend
+│   ├── config/           # Configuration files
+│   ├── controllers/      # Route controllers
+│   ├── middleware/       # Custom middleware
+│   ├── models/          # Database models
+│   ├── routes/          # API routes
+│   └── utils/           # Utility functions
+└── docs/                 # Documentation
 ```
 
-## Future Enhancements
+## Setup Instructions
 
-- Backend integration with Node.js and Express
-- Database implementation with MySQL
-- User authentication and authorization
-- Real-time notifications
-- Export functionality for reports
-- Advanced filtering and search capabilities
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
 
-## Browser Support
+2. Setup Backend:
+   ```bash
+   cd server
+   npm install
+   cp .env.example .env  # Configure your environment variables
+   npm run dev
+   ```
 
-The application is designed to work in all modern browsers:
+3. Setup Frontend:
+   ```bash
+   cd client
+   npm install
+   cp .env.example .env  # Configure your environment variables
+   npm start
+   ```
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+4. Setup Database:
+   - Create MySQL database
+   - Run migrations: `npm run migrate`
+   - (Optional) Seed data: `npm run seed`
+
+## Environment Variables
+
+### Backend (.env)
+```
+PORT=5000
+NODE_ENV=development
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=your_password
+DB_NAME=inventory_db
+JWT_SECRET=your_jwt_secret
+```
+
+### Frontend (.env)
+```
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
+## API Documentation
+
+Detailed API documentation can be found in the [API Documentation](docs/API.md) file.
+
+## Security Features
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- HTTPS-only communication
+- Input validation and sanitization
+- Rate limiting
+- CORS protection
 
 ## Contributing
 
-Feel free to submit issues and enhancement requests. 
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
